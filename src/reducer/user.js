@@ -7,6 +7,7 @@ const initialState = {
   token: null,
   email: null,
   id: null,
+  basket: [],
 }
 
 const userReducer = createReducer(initialState, builder => {

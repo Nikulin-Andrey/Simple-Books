@@ -5,7 +5,14 @@ import {
   createUserWithEmailAndPassword,
   updateProfile,
 } from 'firebase/auth'
+import {
+  getDatabase,
+  ref,
+  set,
+  push,
+} from 'firebase/database'
 
+import { getData } from '@/helpers'
 import { setUserAction } from '@/actions'
 import { LOG_IN, SIGN_UP } from '@/constants'
 
@@ -24,6 +31,14 @@ function * logIn (action) {
           alert('Неверный логин или пароль')
         }),
     )
+    const basket = yield getData('basket/' + user.uid)
+
+    // const db = getDatabase()
+    // const basketRef = ref(db, 'basket/' + user.uid)
+    // const basketBooksRef = push(basketRef)
+    // set(basketBooksRef, {
+    //   bookId: '-N0qPyZrhYHMiAFD1PIN',
+    // })
 
     yield put(
       setUserAction({
@@ -31,6 +46,7 @@ function * logIn (action) {
         email: user.email,
         name: user.displayName,
         id: user.uid,
+        basket,
       }),
     )
   } catch (error) {

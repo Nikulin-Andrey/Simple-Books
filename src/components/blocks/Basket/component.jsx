@@ -11,18 +11,20 @@ import {
 } from '@mui/material'
 import DeleteIcon from '@mui/icons-material/Delete'
 import BookIcon from '@mui/icons-material/Book'
+import { getBasketBooksSelector } from '@/helpers'
 
 import { Container } from './styles'
 
 const Basket = () => {
-  const { books } = useSelector(store => store.booksAuthors)
+  const basketBooks = useSelector(getBasketBooksSelector)
+  console.log(basketBooks)
 
   return (
     <Container>
-      {books.length > 0 ? (
+      {basketBooks.length > 0 ? (
         <>
           <List>
-            {books.map((book, index) => {
+            {basketBooks.map((book, index) => {
               if (index < 10) {
                 return (
                   <ListItem
