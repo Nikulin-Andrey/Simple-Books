@@ -1,0 +1,7 @@
+export const SET_BOOKS = 'SET_BOOKS'
+export const SET_AUTHORS = 'SET_AUTHORS'
+export const GET_BOOKS_AUTHORS = 'GET_BOOKS_AUTHORS'
+export const SET_CATEGORIES = 'SET_CATEGORIES'
+export const SEARCH = 'SEARCH'
+export const SET_FILTERS = 'SET_FILTERS'
+export const PENDING_BOOKS = 'PENDING_BOOKS'
