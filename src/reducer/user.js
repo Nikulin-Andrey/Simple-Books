@@ -1,6 +1,10 @@
 import { createReducer } from '@reduxjs/toolkit'
 
-import { setUserAction, logOutUserAction } from '@/actions'
+import {
+  setUserAction,
+  logOutUserAction,
+  changeBasketAction,
+} from '@/actions'
 
 const initialState = {
   name: null,
@@ -14,6 +18,11 @@ const userReducer = createReducer(initialState, builder => {
   builder.addCase(setUserAction, (state, action) => ({
     ...state,
     ...action.payload,
+  }))
+
+  builder.addCase(changeBasketAction, (state, action) => ({
+    ...state,
+    basket: action.payload,
   }))
 
   builder.addCase(logOutUserAction, () => initialState)

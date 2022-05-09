@@ -20,7 +20,8 @@ const SignUp = () => {
   const handleSubmit = event => {
     event.preventDefault()
     const data = new FormData(event.currentTarget)
-    const name = data.get('firstName') + data.get('lastName')
+    const name =
+      data.get('firstName') + data.get('lastName')
     dispatch(
       signUpAction({
         email: data.get('email'),
@@ -128,11 +129,9 @@ const SignUp = () => {
             <Grid item>
               <NavLink
                 to="/login"
-                style={{ textDecoration: 'none' }}
+                style={{ color: '#42bf8e' }}
               >
-                <Link href="#" variant="body2">
-                  Already have an account? Sign in
-                </Link>
+                Already have an account? Sign in
               </NavLink>
             </Grid>
           </Grid>

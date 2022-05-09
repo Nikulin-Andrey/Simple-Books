@@ -1,4 +1,4 @@
-import { put, call, takeEvery } from 'redux-saga/effects'
+import { put, call, takeEvery, select } from 'redux-saga/effects'
 import {
   getAuth,
   signInWithEmailAndPassword,
@@ -13,8 +13,8 @@ import {
 } from 'firebase/database'
 
 import { getData } from '@/helpers'
-import { setUserAction } from '@/actions'
-import { LOG_IN, SIGN_UP } from '@/constants'
+import { changeBasketAction, setUserAction } from '@/actions'
+import { LOG_IN, SIGN_UP, ADD_IN_BASKET } from '@/constants'
 
 function * logIn (action) {
   const { email, password } = action.payload
@@ -32,13 +32,6 @@ function * logIn (action) {
         }),
     )
     const basket = yield getData('basket/' + user.uid)
-
-    // const db = getDatabase()
-    // const basketRef = ref(db, 'basket/' + user.uid)
-    // const basketBooksRef = push(basketRef)
-    // set(basketBooksRef, {
-    //   bookId: '-N0qPyZrhYHMiAFD1PIN',
-    // })
 
     yield put(
       setUserAction({
@@ -89,9 +82,32 @@ function * signUp (action) {
   }
 }
 
+function * addInbasket (action) {
+  try {
+    const { user } = yield select()
+    console.log(user)
+
+    const db = getDatabase()
+    const basketRef = ref(db, 'basket/' + user.id)
+    const basketBooksRef = push(basketRef)
+
+    set(basketBooksRef, {
+      bookId: action.payload,
+    })
+
+    const basket = yield getData('basket/' + user.id)
+    console.log(basket)
+
+    yield put(changeBasketAction(basket))
+  } catch (e) {
+    console.log(e)
+  }
+}
+
 function * authWatcher () {
   yield takeEvery(LOG_IN, logIn)
   yield takeEvery(SIGN_UP, signUp)
+  yield takeEvery(ADD_IN_BASKET, addInbasket)
 }
 
 export default authWatcher

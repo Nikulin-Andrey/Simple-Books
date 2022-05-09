@@ -90,11 +90,9 @@ const LogIn = () => {
             <Grid item>
               <NavLink
                 to="/signup"
-                style={{ textDecoration: 'none' }}
+                style={{ color: '#42bf8e' }}
               >
-                <Link href="#" variant="body2">
-                  {"Don't have an account? Sign Up"}
-                </Link>
+                {"Don't have an account? Sign Up"}
               </NavLink>
             </Grid>
           </Grid>

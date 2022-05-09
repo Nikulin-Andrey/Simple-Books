@@ -1,9 +1,11 @@
 import * as React from 'react'
 import propTypes from 'prop-types'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
+import { useHistory } from 'react-router-dom'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import DoneOutlineIcon from '@mui/icons-material/DoneOutline'
+import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart'
 import {
   Image,
   Title,
@@ -15,6 +17,7 @@ import {
   Categories,
   Category,
 } from './styles'
+import { addInBasketAction } from '@/actions'
 
 const BookCard = ({
   description,
@@ -23,10 +26,26 @@ const BookCard = ({
   author,
   price,
   img,
+  id,
 }) => {
+  const history = useHistory()
+  const dispatch = useDispatch()
+
   const { authors, categories } = useSelector(
     store => store.booksAuthors,
   )
+  const user = useSelector(store => store.user)
+
+  const isInBasket =
+    user.basket.findIndex(book => book.bookId === id) !== -1
+
+  const onAdd = () => {
+    if (user.id === null) {
+      history.push('/login')
+    } else {
+      dispatch(addInBasketAction(id))
+    }
+  }
 
   return (
     <Card
@@ -63,11 +82,19 @@ const BookCard = ({
         </Categories>
       </CardContent>
       <Bottom>
-        <Add size="large" color="primary">
-          {
-            // secondary color <AddShoppingCartIcon />
-          }
-          <DoneOutlineIcon fontSize="large" />
+        <Add
+          size="large"
+          color="primary"
+          onClick={onAdd}
+        >
+          {isInBasket ? (
+            <DoneOutlineIcon fontSize="large" />
+          ) : (
+            <AddShoppingCartIcon
+              fontSize="large"
+              color="secondary"
+            />
+          )}
         </Add>
         <Price
           variant="h3"
@@ -88,6 +115,7 @@ BookCard.propTypes = {
   author: propTypes.string,
   price: propTypes.number,
   img: propTypes.string,
+  id: propTypes.string,
 }
 
 export default BookCard

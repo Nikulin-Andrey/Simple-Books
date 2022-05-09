@@ -5,12 +5,10 @@ import {
 } from 'firebase/database'
 
 export const convertToArray = data => {
-  console.log(data)
   const result = Object.keys(data).map(key => ({
     id: key,
     ...data[key],
   }))
-  console.log(result)
   return result
 }
 
