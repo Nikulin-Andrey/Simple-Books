@@ -71,6 +71,10 @@ export const getBasketBooksSelector = store => {
   const { books } = store.booksAuthors
   const { basket } = store.user
 
+  if (!basket) {
+    return []
+  }
+
   return basket.map(basketBook =>
     books.find(book => book.id === basketBook.bookId),
   )

@@ -37,7 +37,7 @@ const BookCard = ({
   const user = useSelector(store => store.user)
 
   const isInBasket =
-    user.basket.findIndex(book => book.bookId === id) !== -1
+    user.basket && user.basket.findIndex(book => book.bookId === id) !== -1
 
   const onAdd = () => {
     if (user.id === null) {

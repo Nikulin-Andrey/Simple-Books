@@ -5,6 +5,9 @@ import {
 } from 'firebase/database'
 
 export const convertToArray = data => {
+  if (!data) {
+    return data
+  }
   const result = Object.keys(data).map(key => ({
     id: key,
     ...data[key],

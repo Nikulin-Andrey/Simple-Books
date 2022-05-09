@@ -1,5 +1,5 @@
 import React from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import {
   List,
   ListItem,
@@ -11,17 +11,27 @@ import {
 } from '@mui/material'
 import DeleteIcon from '@mui/icons-material/Delete'
 import BookIcon from '@mui/icons-material/Book'
+
+import Loader from '@/components/common/Loader'
 import { getBasketBooksSelector } from '@/helpers'
+import { removeFromBasketAction } from '@/actions'
 
 import { Container } from './styles'
 
 const Basket = () => {
+  const dispatch = useDispatch()
   const basketBooks = useSelector(getBasketBooksSelector)
-  console.log(basketBooks)
+  const { basket } = useSelector(store => store.user)
+
+  const onDelete = bookId => () => {
+    const book = basket.find(el => el.bookId === bookId)
+    console.log(book, basket)
+    dispatch(removeFromBasketAction(book.id))
+  }
 
   return (
     <Container>
-      {basketBooks.length > 0 ? (
+      {basketBooks && basketBooks.length > 0 ? (
         <>
           <List>
             {basketBooks.map((book, index) => {
@@ -33,6 +43,7 @@ const Basket = () => {
                       <IconButton
                         edge="end"
                         aria-label="delete"
+                        onClick={onDelete(book.id)}
                       >
                         <DeleteIcon />
                       </IconButton>

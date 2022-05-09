@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import Avatar from '@mui/material/Avatar'
 import Button from '@mui/material/Button'
 import CssBaseline from '@mui/material/CssBaseline'
@@ -13,10 +13,14 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
 import Typography from '@mui/material/Typography'
 import Container from '@mui/material/Container'
 import { NavLink } from 'react-router-dom'
+import { useHistory } from 'react-router-dom/cjs/react-router-dom.min'
+
 import { logInAction } from '@/actions'
 
 const LogIn = () => {
   const dispatch = useDispatch()
+  const user = useSelector(store => store.user)
+  const history = useHistory()
 
   const handleSubmit = event => {
     event.preventDefault()
@@ -27,6 +31,10 @@ const LogIn = () => {
         password: data.get('password'),
       }),
     )
+  }
+
+  if (user.id) {
+    history.push('/basket')
   }
 
   return (

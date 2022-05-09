@@ -10,11 +10,12 @@ import {
   ref,
   set,
   push,
+  remove,
 } from 'firebase/database'
 
 import { getData } from '@/helpers'
 import { changeBasketAction, setUserAction } from '@/actions'
-import { LOG_IN, SIGN_UP, ADD_IN_BASKET } from '@/constants'
+import { LOG_IN, SIGN_UP, ADD_IN_BASKET, REMOVE_FROM_BASKET } from '@/constants'
 
 function * logIn (action) {
   const { email, password } = action.payload
@@ -91,7 +92,7 @@ function * addInbasket (action) {
     const basketRef = ref(db, 'basket/' + user.id)
     const basketBooksRef = push(basketRef)
 
-    set(basketBooksRef, {
+    yield set(basketBooksRef, {
       bookId: action.payload,
     })
 
@@ -104,10 +105,29 @@ function * addInbasket (action) {
   }
 }
 
+function * removeFromBasket (action) {
+  try {
+    const { user } = yield select()
+    console.log(user)
+
+    const db = getDatabase()
+    const basketRef = ref(db, `basket/${user.id}/${action.payload}`)
+
+    remove(basketRef)
+
+    const basket = yield getData('basket/' + user.id)
+
+    yield put(changeBasketAction(basket))
+  } catch (e) {
+    console.log(e)
+  }
+}
+
 function * authWatcher () {
   yield takeEvery(LOG_IN, logIn)
   yield takeEvery(SIGN_UP, signUp)
   yield takeEvery(ADD_IN_BASKET, addInbasket)
+  yield takeEvery(REMOVE_FROM_BASKET, removeFromBasket)
 }
 
 export default authWatcher
