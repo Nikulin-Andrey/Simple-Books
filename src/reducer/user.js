@@ -4,6 +4,7 @@ import {
   setUserAction,
   logOutUserAction,
   changeBasketAction,
+  changeOrdersAction,
 } from '@/actions'
 
 const initialState = {
@@ -12,6 +13,8 @@ const initialState = {
   email: null,
   id: null,
   basket: [],
+  orders: [],
+  admin: false,
 }
 
 const userReducer = createReducer(initialState, builder => {
@@ -23,6 +26,11 @@ const userReducer = createReducer(initialState, builder => {
   builder.addCase(changeBasketAction, (state, action) => ({
     ...state,
     basket: action.payload,
+  }))
+
+  builder.addCase(changeOrdersAction, (state, action) => ({
+    ...state,
+    orders: action.payload,
   }))
 
   builder.addCase(logOutUserAction, () => initialState)

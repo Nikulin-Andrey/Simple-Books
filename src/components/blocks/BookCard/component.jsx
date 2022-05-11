@@ -17,7 +17,7 @@ import {
   Categories,
   Category,
 } from './styles'
-import { addInBasketAction } from '@/actions'
+import { addInBasketAction, removeFromBasketAction } from '@/actions'
 
 const BookCard = ({
   description,
@@ -44,6 +44,15 @@ const BookCard = ({
       history.push('/login')
     } else {
       dispatch(addInBasketAction(id))
+    }
+  }
+
+  const onDelete = () => {
+    if (user.id === null) {
+      history.push('/login')
+    } else {
+      const book = user.basket.find(el => el.bookId === id)
+      dispatch(removeFromBasketAction(book.id))
     }
   }
 
@@ -85,7 +94,7 @@ const BookCard = ({
         <Add
           size="large"
           color="primary"
-          onClick={onAdd}
+          onClick={isInBasket ? onDelete : onAdd}
         >
           {isInBasket ? (
             <DoneOutlineIcon fontSize="large" />

@@ -14,7 +14,10 @@ import BookIcon from '@mui/icons-material/Book'
 
 import Loader from '@/components/common/Loader'
 import { getBasketBooksSelector } from '@/helpers'
-import { removeFromBasketAction } from '@/actions'
+import {
+  createOrderAction,
+  removeFromBasketAction,
+} from '@/actions'
 
 import { Container } from './styles'
 
@@ -27,6 +30,10 @@ const Basket = () => {
     const book = basket.find(el => el.bookId === bookId)
     console.log(book, basket)
     dispatch(removeFromBasketAction(book.id))
+  }
+
+  const onCreateOrder = () => {
+    dispatch(createOrderAction(basket))
   }
 
   return (
@@ -65,7 +72,11 @@ const Basket = () => {
               }
             })}
           </List>
-          <Button variant="outlined" size="large">
+          <Button
+            variant="outlined"
+            size="large"
+            onClick={onCreateOrder}
+          >
             Оформить заказ
           </Button>
         </>

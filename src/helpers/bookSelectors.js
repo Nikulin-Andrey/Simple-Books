@@ -79,3 +79,27 @@ export const getBasketBooksSelector = store => {
     books.find(book => book.id === basketBook.bookId),
   )
 }
+
+export const getOrdersSelector = store => {
+  const { books } = store.booksAuthors
+  const { orders } = store.user
+
+  if (!orders) {
+    return []
+  }
+
+  return orders.map(order => {
+    const orderBooks = books.filter(book =>
+      order.idBooks.includes(book.id),
+    )
+
+    return {
+      ...order,
+      books: orderBooks,
+      totalPrice: orderBooks.reduce(
+        (acc, book) => acc + book.price,
+        0,
+      ),
+    }
+  })
+}

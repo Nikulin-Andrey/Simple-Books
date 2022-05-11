@@ -1,51 +1,84 @@
 import React from 'react'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import {
   List,
   ListItem,
-  IconButton,
   ListItemAvatar,
   Avatar,
   ListItemText,
-  Stack,
 } from '@mui/material'
-import DeleteIcon from '@mui/icons-material/Delete'
-import BookIcon from '@mui/icons-material/Book'
+import AddCardIcon from '@mui/icons-material/AddCard'
 
+import { getOrdersSelector } from '@/helpers'
+import { ORDER_STATUS } from '@/constants'
+import { updateStatusAction } from '@/actions'
 import { Status, RightInfo } from './styles'
 
 const Orders = () => {
-  const books = useSelector(store => store.example)
+  const dispatch = useDispatch()
+  const orders = useSelector(getOrdersSelector)
+  const { admin } = useSelector(store => store.user)
+
+  const handleStatus = id => () => {
+    if (admin) {
+      dispatch(updateStatusAction(id))
+    }
+  }
 
   return (
-    <List>
-      {books.data.length > 0 ? (
-        books.data.map((book, index) => {
-          if (index < 10) {
-            return (
-              <ListItem
-                key={book.id}
-                secondaryAction={
-                  <RightInfo>
-                    <Status label="Завершен" />
-                    <p>20$</p>
-                  </RightInfo>
-                }
-              >
-                <ListItemAvatar>
-                  <Avatar color="primary">
-                    <BookIcon />
-                  </Avatar>
-                </ListItemAvatar>
-                <ListItemText
-                  primary={book.title}
-                  secondary="Калиновского дом 23 квартира 5"
-                />
-              </ListItem>
-            )
-          } else {
-            return null
-          }
+    <List
+      sx={{
+        borderTop: '1px solid rgba(0, 0, 0, 0.12)',
+        paddingTop: 0,
+      }}
+    >
+      {orders.length > 0 ? (
+        orders.map(order => {
+          return (
+            <ListItem
+              key={order.id}
+              sx={{
+                borderBottom:
+                  '1px solid rgba(0, 0, 0, 0.12)',
+              }}
+              secondaryAction={
+                <RightInfo>
+                  <Status label={ORDER_STATUS[order.status]} onClick={admin ? handleStatus(order.id) : null} />
+                  <p>{order.totalPrice}$</p>
+                </RightInfo>
+              }
+            >
+              <ListItemAvatar>
+                <Avatar color="primary">
+                  <AddCardIcon />
+                </Avatar>
+              </ListItemAvatar>
+              <List>
+                {order.books.map(book => (
+                  <ListItem
+                    key={book.id}
+                    sx={{ paddingBottom: '0px' }}
+                  >
+                    <ListItemText
+                      secondary={book.title}
+                      sx={{
+                        borderBottom:
+                          '1px solid rgba(0, 0, 0, 0.12)',
+                      }}
+                    />
+                  </ListItem>
+                ))}
+              </List>
+              {
+                admin && (
+                  <div>
+                    <p>ID пользователя: {order.userId}</p>
+                    <p>ID заказа: {order.id}</p>
+                  </div>
+                )
+              }
+            </ListItem>
+          )
         })
       ) : (
         <p>Заказов пока нет.</p>
